@@ -120,7 +120,7 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
         p1 = Polygon(i)
         pols.append(p1)
     convert_to_shape_csv(pols)
-
-    return img
+    
+    # return img
 
     # img.show()
