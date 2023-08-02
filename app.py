@@ -1,19 +1,23 @@
-from flask import Flask,render_template, request, jsonify, send_file, abort
-from generate_set import generate_sets
-from generate_polygon import generate_polygon
 import os
 import zipfile
 from time import sleep
+
+from flask import Flask, abort, jsonify, render_template, request, send_file
+from flask_cors import CORS, cross_origin
+from generate_polygon import generate_polygon
+from generate_set import generate_sets
 
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
+CORS(app)
 
-
-@app.route('/')
+@app.route('/',methods=["POST"])
+@cross_origin()
 def get_json_data():
-    # receive card, xsize, ysize, vertices_bound, irregularity_clip, spikiness_clip, show_grid from request body
+    # receive card, xsize, ysize, vertices_bound, irregularit
+    # y_clip, spikiness_clip, show_grid from request body
     card = request.get_json()['card']
     xsize= request.get_json()['xsize']
     ysize = request.get_json()['ysize']
