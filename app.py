@@ -69,4 +69,4 @@ def get_visualization_data(uuid):
         return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
     
 
-app.run(debug=True)                                                             
+app.run(debug=False)                                                             
