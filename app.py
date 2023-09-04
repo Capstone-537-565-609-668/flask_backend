@@ -16,15 +16,12 @@ CORS(app)
 @app.route('/',methods=["POST"])
 @cross_origin()
 def get_json_data():
-    # receive card, xsize, ysize, vertices_bound, irregularit
-    # y_clip, spikiness_clip, show_grid from request body
-    card = request.get_json()['card']
-    xsize= request.get_json()['xsize']
-    ysize = request.get_json()['ysize']
-    vertices_bound= request.get_json()['vertices_bound']
-    vertices_bound = tuple(vertices_bound)
-    irregularity_clip = request.get_json()['irregularity_clip']
-    spikiness_clip = request.get_json()['spikiness_clip']
+    card = int(request.get_json()['card'])
+    xsize= int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    vertices_bound= tuple(map(lambda x:int(x),request.get_json()['vertices_bound'])) 
+    irregularity_clip = float(request.get_json()['irregularity_clip'])
+    spikiness_clip = float(request.get_json()['spikiness_clip'])
     # Visualize the generated polygons
     dataset_id, for_visualizer = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
                           irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
@@ -32,9 +29,6 @@ def get_json_data():
     # return 200 with dataset_id as json
     return jsonify({'dataset_id': dataset_id, 'for_visualizer': for_visualizer})
 
-
-# go to outputs/:id and then send the files
-# for download
 
 OUTPUTS_DIRECTORY = 'outputs'
 
@@ -60,17 +54,12 @@ def get_folder_by_uuid(uuid):
 
     # Send the zip archive to the client and delete it afterwards.
     response=send_file(zip_file_path, as_attachment=True)
-    # os.remove(zip_file_path)
     return response
-    # try:
-    #     return send_file(zip_file_path, as_attachment=True)
-    # finally:
-    #     os.remove(zip_file_path)
+
     
 # get visualization data 
 @app.route('/get_visualization/<string:uuid>', methods=['GET'])
 def get_visualization_data(uuid):
-    # get from uuid.json in outputs directory
     folder_path=os.path.join(OUTPUTS_DIRECTORY, uuid, 'visualization_data.json')
     if not os.path.exists(folder_path):
         abort(404, f"Folder with UUID '{uuid}' not found.")
