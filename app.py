@@ -1,7 +1,7 @@
 import os
 import zipfile
 from time import sleep
-
+import json
 from flask import Flask, abort, jsonify, render_template, request, send_file
 from flask_cors import CORS, cross_origin
 from generate_polygon import generate_polygon
@@ -66,5 +66,18 @@ def get_folder_by_uuid(uuid):
     #     return send_file(zip_file_path, as_attachment=True)
     # finally:
     #     os.remove(zip_file_path)
+    
+# get visualization data 
+@app.route('/get_visualization/<string:uuid>', methods=['GET'])
+def get_visualization_data(uuid):
+    # get from uuid.json in outputs directory
+    folder_path=os.path.join(OUTPUTS_DIRECTORY, uuid, 'visualization_data.json')
+    if not os.path.exists(folder_path):
+        abort(404, f"Folder with UUID '{uuid}' not found.")
+
+    with open(folder_path, 'r') as f:
+        visualization_data = json.load(f)
+        return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
+    
 
 app.run(debug=True)                                                             

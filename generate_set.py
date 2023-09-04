@@ -66,6 +66,11 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
 
     #send 15 polygons for visualization which is json serialized
     for_vis =pols[:15]
-  
-    return (convert_to_shape_csv(pols), geopandas.GeoDataFrame(geometry=for_vis).to_json())
+    dataset_descriptor=convert_to_shape_csv(pols)
+    json_visualization_data = geopandas.GeoDataFrame(geometry=for_vis).to_json()
+    # dump json_visualization_data to outputs/dataset_descriptor.json
+    with open(f"outputs/{dataset_descriptor}/visualization_data.json", "w") as f:
+        json.dump(json_visualization_data, f)
+    
+    return (dataset_descriptor, json_visualization_data)
     
