@@ -13,6 +13,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/' , methods=["GET"])
+def index():
+    return "Hello World"
+
 @app.route('/',methods=["POST"])
 @cross_origin()
 def get_json_data():
@@ -69,4 +73,4 @@ def get_visualization_data(uuid):
         return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
     
 
-app.run(debug=False)                                                             
+app.run(debug=False, port=4080)                                                             
