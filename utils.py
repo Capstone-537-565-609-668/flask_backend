@@ -1,7 +1,10 @@
 import math
 import random
 from typing import List
-
+from shapely.geometry import Polygon
+from download_csv import convert_to_shape_csv
+import geopandas
+import json
 '''
   Time : O(1)
   Space : O(1)
@@ -49,3 +52,20 @@ def random_angle_steps(steps: int, irregularity: float) -> List[float]:
     for i in range(steps):
         angles[i] /= cumsum
     return angles
+
+
+def convert_for_visualize(polygons):
+    poly = []
+    for i in polygons:
+        p1 = Polygon(i)
+        poly.append(p1)
+
+    for_vis = poly[:15]
+    dataset_descriptor = convert_to_shape_csv(poly)
+    json_visualization_data = geopandas.GeoDataFrame(
+        geometry=for_vis).to_json()
+    # dump json_visualization_data to outputs/dataset_descriptor.json
+    with open(f"outputs/{dataset_descriptor}/visualization_data.json", "w") as f:
+        json.dump(json_visualization_data, f)
+
+    return dataset_descriptor, json_visualization_data
