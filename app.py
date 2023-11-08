@@ -35,15 +35,15 @@ def get_data_voronoi():
 @app.route("/generate_points_convexhull/", methods=["POST"])
 @cross_origin()
 def get_data_convexHull():
-    num_points, min_coord, max_coord = int(request.get_json()['num_points']), int(
-        request.get_json()['min_coord']), int(request.get_json()['max_coord'])
+    num_points, xsize, ysize = int(request.get_json()['num_points']), int(
+        request.get_json()['xsize']), int(request.get_json()['ysize'])
 
-    if (min_coord == max_coord):
-        return jsonify({'dataset_id': None, 'for_visualizer':  None, "status": 501})
+    # if (min_coord == max_coord):
+    #     return jsonify({'dataset_id': None, 'for_visualizer':  None, "status": 501})
 
     dataset_descriptor, json_visualization_data = convex_hull_gen(num_points=num_points,
-                                                                  min_coord=min_coord,
-                                                                  max_coord=max_coord)
+                                                                  xsize=xsize,
+                                                                  ysize=ysize)
 
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data})
 
