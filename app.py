@@ -32,7 +32,7 @@ def get_data_voronoi():
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data})
 
 
-@app.route("/generate_points_convexHull/", methods=["POST"])
+@app.route("/generate_points_convexhull/", methods=["POST"])
 @cross_origin()
 def get_data_convexHull():
     num_points, min_coord, max_coord = int(request.get_json()['num_points']), int(
