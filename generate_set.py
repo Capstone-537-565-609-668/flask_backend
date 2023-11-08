@@ -65,10 +65,12 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     for i in shapes:
         p1 = Polygon(i)
         pols.append(p1)
+    pols = validate_polygon(pols)
+
 
     # send 15 polygons for visualization which is json serialized
     for_vis = pols[:15]
-    dataset_descriptor = convert_to_shape_csv(pols)
+    dataset_descriptor = convert_to_shape_csv(pols[:card])
     json_visualization_data = geopandas.GeoDataFrame(
         geometry=for_vis).to_json()
     # dump json_visualization_data to outputs/dataset_descriptor.json
