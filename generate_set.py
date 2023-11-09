@@ -6,6 +6,7 @@ from download_csv import convert_to_shape_csv
 from shapely.geometry import Polygon
 from utils import clip
 from generate_polygon import generate_polygon
+from validate_polygon import validate_polygon
 import json
 import geopandas
 '''
