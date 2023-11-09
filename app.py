@@ -8,6 +8,7 @@ from generate_set import generate_sets
 from generate_points import generate_points
 from voronoi_gen import generate_voronoi
 from convex_hull_gen import convex_hull_gen
+from realistic_polygon import analyze_polygon_data
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,6 +20,16 @@ CORS(app)
 def index():
     return "Hello World"
 
+
+@app.route("/realistic_polygon/", methods=["POST"])
+@cross_origin()
+def get_realistic_polygon():
+    card = int(request.get_json()['card'])
+    xsize = int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    type = request.get_json()['type']
+    dataset_descriptor, json_visualization_data = analyze_polygon_data(type, xsize, ysize, card)
+    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
 
 @app.route("/generate_points_voronoi/", methods=["POST"])
 @cross_origin()
