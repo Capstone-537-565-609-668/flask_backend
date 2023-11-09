@@ -1,13 +1,22 @@
+from generate_set import generate_sets
+from shapely.geometry import Polygon
+import os
+import pymongo
+import certifi
 from dotenv import load_dotenv
 load_dotenv()
-import pymongo
-import os
-from shapely.geometry import Polygon
-from generate_set import generate_sets
+
+'''
+    1. parks
+    2. lakes
+    3. sport
+
+'''
 
 
 def analyze_polygon_data(type_param, xsize, ysize, card):
-    client = pymongo.MongoClient(os.getenv("DB_URI"))
+    client = pymongo.MongoClient(
+        os.getenv("DB_URI"), tlsCAFile=certifi.where())
     db = client[os.getenv("MONGO_DBNAME")]
     collection = db[os.getenv("MONGO_COLLECTION")]
 
@@ -17,7 +26,7 @@ def analyze_polygon_data(type_param, xsize, ysize, card):
 
     # Initialize lists to store results for multiple polygons of the specified type
     vertices_list = []
-   
+
     irregularity_coeff_list = []
     spikiness_score_list = []
     average_radius_list = []
@@ -26,7 +35,6 @@ def analyze_polygon_data(type_param, xsize, ysize, card):
         # Number of vertices
         num_vertices = data["num_vertices"]
         vertices_list.append(num_vertices)
-        
 
         # Irregularity coefficient
         irregularity_coeff = data["irregularity_coeff"]
@@ -43,7 +51,8 @@ def analyze_polygon_data(type_param, xsize, ysize, card):
     # Calculate the minimum and maximum vertices, irregularity, spikiness, and average radius
     min_vertices = min(vertices_list)
     max_vertices = max(vertices_list)
-    avg_irregularity = sum(irregularity_coeff_list) / len(irregularity_coeff_list)
+    avg_irregularity = sum(irregularity_coeff_list) / \
+        len(irregularity_coeff_list)
     avg_spikiness = sum(spikiness_score_list) / len(spikiness_score_list)
     avg_radius = sum(average_radius_list) / len(average_radius_list)
 
@@ -67,5 +76,3 @@ def analyze_polygon_data(type_param, xsize, ysize, card):
 # print("Average Irregularity:", results["average_irregularity"])
 # print("Average Spikiness:", results["average_spikiness"])
 # print("Average Radius:", results["average_radius"])
-
-

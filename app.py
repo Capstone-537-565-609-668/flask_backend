@@ -24,12 +24,14 @@ def index():
 @app.route("/realistic_polygon/", methods=["POST"])
 @cross_origin()
 def get_realistic_polygon():
-    card = int(request.get_json()['card'])
+    card = int(request.get_json()['cardinality'])
     xsize = int(request.get_json()['xsize'])
     ysize = int(request.get_json()['ysize'])
     type = request.get_json()['type']
-    dataset_descriptor, json_visualization_data = analyze_polygon_data(type, xsize, ysize, card)
+    dataset_descriptor, json_visualization_data = analyze_polygon_data(
+        type, xsize, ysize, card)
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
+
 
 @app.route("/generate_points_voronoi/", methods=["POST"])
 @cross_origin()
