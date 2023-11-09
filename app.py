@@ -23,10 +23,10 @@ def index():
 @app.route("/generate_points_voronoi/", methods=["POST"])
 @cross_origin()
 def get_data_voronoi():
-    card = int(request.get_json()['card'])
+    cardinality = int(request.get_json()['cardinality'])
     xsize = int(request.get_json()['xsize'])
     ysize = int(request.get_json()['ysize'])
-    seed_ = generate_points(card, xsize, ysize)
+    seed_ = generate_points(cardinality, xsize, ysize)
     dataset_descriptor, json_visualization_data = generate_voronoi(seed_)
 
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data})
@@ -35,13 +35,13 @@ def get_data_voronoi():
 @app.route("/generate_points_convexhull/", methods=["POST"])
 @cross_origin()
 def get_data_convexHull():
-    num_points, xsize, ysize = int(request.get_json()['num_points']), int(
+    cardinality, xsize, ysize = int(request.get_json()['cardinality']), int(
         request.get_json()['xsize']), int(request.get_json()['ysize'])
 
     # if (min_coord == max_coord):
     #     return jsonify({'dataset_id': None, 'for_visualizer':  None, "status": 501})
 
-    dataset_descriptor, json_visualization_data = convex_hull_gen(num_points=num_points,
+    dataset_descriptor, json_visualization_data = convex_hull_gen(num_points=cardinality,
                                                                   xsize=xsize,
                                                                   ysize=ysize)
 
