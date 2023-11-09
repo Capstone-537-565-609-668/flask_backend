@@ -108,4 +108,4 @@ def get_visualization_data(uuid):
         return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
 
 
-app.run(debug=False, port=4080)
+app.run(debug=False, port=5000)
