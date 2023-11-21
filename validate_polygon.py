@@ -20,13 +20,11 @@ def validate_polygon(pols):
     geoseries = gpd.GeoSeries(pols)
     shp = gpd.GeoDataFrame(geoseries, columns=['geometry'])
     shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
+
     multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
-    shp = shp[shp['geometry'].geom_type != 'MultiPolygon']
-    multi_polygons = multi_polygons.explode()
+    shp = shp[shp['geometry'].geom_type == 'Polygon']
+    multi_polygons = multi_polygons.explode(index_parts=True)
 
     # Concatenate the exploded MultiPolygons back to the original GeoDataFrame
     shp = pd.concat([shp, multi_polygons], ignore_index=True)
     return shp['geometry'].tolist()
-
-
-

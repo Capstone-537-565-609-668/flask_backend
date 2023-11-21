@@ -141,5 +141,24 @@ def get_visualization_data(uuid):
         visualization_data = json.load(f)
         return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
 
+# Test route for flask
+
+
+@app.route('/test', methods=['POST'])
+def test():
+    card = int(request.get_json()['card'])
+    xsize = int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    vertices_bound = tuple(
+        map(lambda x: int(x), request.get_json()['vertices_bound']))
+    irregularity_clip = float(request.get_json()['irregularity_clip'])
+    spikiness_clip = float(request.get_json()['spikiness_clip'])
+    # Visualize the generated polygons
+    dataset_id, csv_size = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
+                                         irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip, for_dataset=True)
+
+    # return 200 with dataset_id as json
+    return jsonify({'dataset_id': dataset_id, 'csv_size': csv_size})
+
 
 app.run(debug=False, port=5000)
