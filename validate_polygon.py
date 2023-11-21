@@ -19,13 +19,18 @@ def correct_invalid_geometry(geometry):
 def validate_polygon(pols):
     geoseries = gpd.GeoSeries(pols)
     shp = gpd.GeoDataFrame(geoseries, columns=['geometry'])
-    shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
+    overlaps = gpd.overlay(shp, shp, how='intersection')
 
+    # Merge the overlapping geometries
+    merged = gpd.overlay(shp, overlaps, how='union')
+    # Drop duplicate columns and reset index
+    merged = merged[shp.columns].reset_index(drop=True)
+    shp['geometry'] = merged['geometry'].apply(correct_invalid_geometry)
     multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
     shp = shp[shp['geometry'].geom_type == 'Polygon']
     if not multi_polygons.empty:
         multi_polygons = multi_polygons.explode(index_parts=True)
         shp = pd.concat([shp, multi_polygons], ignore_index=True)
-        return validate_polygons(shp)
+        return validate_polygon(shp)
     
     return shp['geometry'].tolist()
