@@ -15,7 +15,7 @@ import geopandas
 '''
 
 
-def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregularity_clip=0.8, spikiness_clip=0.8):
+def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregularity_clip=0.8, spikiness_clip=0.8, for_dataset=False):
     gridCols = math.ceil(math.sqrt(card))
     gridRows = math.ceil(math.sqrt(card))
     print(card, gridCols, gridRows, gridCols * gridRows)
@@ -68,10 +68,16 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
         pols.append(p1)
     pols = validate_polygon(pols)
 
-
     # send 15 polygons for visualization which is json serialized
     for_vis = pols[:15]
-    dataset_descriptor = convert_to_shape_csv(pols[:card])
+
+    if (for_dataset):
+        dataset_descriptor, csv_size = convert_to_shape_csv(
+            pols[:card], for_dataset=for_dataset)
+        return (dataset_descriptor, csv_size)
+
+    dataset_descriptor = convert_to_shape_csv(
+        pols[:card], for_dataset=for_dataset)
     json_visualization_data = geopandas.GeoDataFrame(
         geometry=for_vis).to_json()
     # dump json_visualization_data to outputs/dataset_descriptor.json

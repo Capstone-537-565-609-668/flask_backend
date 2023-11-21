@@ -64,6 +64,7 @@ def get_data_convexHull():
 @app.route('/', methods=["POST"])
 @cross_origin()
 def get_json_data():
+
     card = int(request.get_json()['card'])
     xsize = int(request.get_json()['xsize'])
     ysize = int(request.get_json()['ysize'])
@@ -89,6 +90,16 @@ def find_folder_by_uuid(uuid):
     return None
 
 
+def find_file_by_uuid_ext(uuid, ext):
+    folder_path = os.path.join(OUTPUTS_DIRECTORY, uuid)
+    if os.path.exists(folder_path) and os.path.isdir(folder_path):
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                if file.endswith(ext):
+                    return os.path.join(root, file)
+    return None
+
+
 @app.route('/get_file/<string:uuid>', methods=['GET'])
 def get_folder_by_uuid(uuid):
     folder_path = find_folder_by_uuid(uuid)
@@ -108,7 +119,17 @@ def get_folder_by_uuid(uuid):
     return response
 
 
-# get visualization data
+@app.route('/get_file/<string:uuid>/<string:type>', methods=['GET'])
+def get_folder_by_uuid_type(uuid, type):
+    file_path = find_file_by_uuid_ext(uuid, type)
+    if not file_path:
+        abort(404, f"Folder with UUID '{uuid}' not found.")
+
+    # Send the file to the client
+    response = send_file(file_path, as_attachment=True)
+    return response
+
+
 @app.route('/get_visualization/<string:uuid>', methods=['GET'])
 def get_visualization_data(uuid):
     folder_path = os.path.join(
@@ -119,6 +140,25 @@ def get_visualization_data(uuid):
     with open(folder_path, 'r') as f:
         visualization_data = json.load(f)
         return jsonify({"for_visualizer": visualization_data, "dataset_id": uuid})
+
+# Test route for flask
+
+
+@app.route('/test', methods=['POST'])
+def test():
+    card = int(request.get_json()['card'])
+    xsize = int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    vertices_bound = tuple(
+        map(lambda x: int(x), request.get_json()['vertices_bound']))
+    irregularity_clip = float(request.get_json()['irregularity_clip'])
+    spikiness_clip = float(request.get_json()['spikiness_clip'])
+    # Visualize the generated polygons
+    dataset_id, csv_size = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
+                                         irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip, for_dataset=True)
+
+    # return 200 with dataset_id as json
+    return jsonify({'dataset_id': dataset_id, 'csv_size': csv_size})
 
 
 app.run(debug=False, port=5000)
