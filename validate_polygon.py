@@ -23,8 +23,9 @@ def validate_polygon(pols):
 
     multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
     shp = shp[shp['geometry'].geom_type == 'Polygon']
-    multi_polygons = multi_polygons.explode(index_parts=True)
-
-    # Concatenate the exploded MultiPolygons back to the original GeoDataFrame
-    shp = pd.concat([shp, multi_polygons], ignore_index=True)
+    if not multi_polygons.empty:
+        multi_polygons = multi_polygons.explode(index_parts=True)
+        shp = pd.concat([shp, multi_polygons], ignore_index=True)
+        return validate_polygons(shp)
+    
     return shp['geometry'].tolist()
