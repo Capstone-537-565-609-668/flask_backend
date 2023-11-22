@@ -5,6 +5,7 @@ from shapely.geometry import Polygon
 from download_csv import convert_to_shape_csv
 import geopandas
 import json
+import ast
 '''
   Time : O(1)
   Space : O(1)
@@ -69,3 +70,18 @@ def convert_for_visualize(polygons):
         json.dump(json_visualization_data, f)
 
     return dataset_descriptor, json_visualization_data
+
+
+def string_to_tuple(coord_string):
+    try:
+        # Using ast.literal_eval to safely evaluate the string as a literal
+        coord_tuple = ast.literal_eval(coord_string)
+
+        # Checking if the result is a tuple of two floats
+        if isinstance(coord_tuple, tuple) and len(coord_tuple) == 2 and all(isinstance(x, float) for x in coord_tuple):
+            return coord_tuple
+        else:
+            raise ValueError("Invalid input: Not a tuple of two floats")
+    except (SyntaxError, ValueError) as e:
+        print(f"Error: {e}")
+        return None

@@ -16,8 +16,9 @@ import geopandas
 
 
 def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregularity_clip=0.8, spikiness_clip=0.8, for_dataset=False):
-    gridCols = math.ceil(math.sqrt(card))
-    gridRows = math.ceil(math.sqrt(card))
+    cellSize = 50
+    gridCols = xsize//cellSize
+    gridRows = ysize//cellSize
     print(card, gridCols, gridRows, gridCols * gridRows)
     if card > (gridCols*gridRows):
         card = gridCols*gridRows
@@ -53,8 +54,10 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
                        clip((ysize/(2*gridRows))+(key)*(ysize/(gridRows)), 0, ysize))
 
             shapes.append(generate_polygon(center=centerx,
-                                           avg_radius=random.randint(
-                                               20, max(21, int(xsize/(2*gridCols)))),
+                                           #    avg_radius=random.randint(
+                                           #        0, max(21, )),
+                                           #    avg_radius=int(xsize/(2*gridCols)),
+                                           avg_radius=cellSize,
                                            irregularity=clip(
                                                random.random(), 0, irregularity_clip),
                                            spikiness=clip(
@@ -69,7 +72,7 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     pols = validate_polygon(pols)
 
     # send 15 polygons for visualization which is json serialized
-    for_vis = pols[:15]
+    for_vis = pols[:100]
 
     if (for_dataset):
         dataset_descriptor, csv_size = convert_to_shape_csv(
