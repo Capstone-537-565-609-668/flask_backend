@@ -1,14 +1,17 @@
+import json
 import math
 import random
-import matplotlib.pyplot as plt
-from PIL import Image, ImageFont, ImageDraw
-from download_csv import convert_to_shape_csv
-from shapely.geometry import Polygon
-from utils import clip
-from generate_polygon import generate_polygon
-from validate_polygon import validate_polygon
-import json
+
 import geopandas
+import matplotlib.pyplot as plt
+from PIL import Image, ImageDraw, ImageFont
+from shapely.geometry import Polygon
+
+from download_csv import convert_to_shape_csv
+from generate_polygon import generate_polygon
+from utils import clip
+from validate_polygon import validate_polygon
+
 '''
   Time : O(N) , where N is number of vertices
   space : O(M)
@@ -54,10 +57,10 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
                        clip((ysize/(2*gridRows))+(key)*(ysize/(gridRows)), 0, ysize))
 
             shapes.append(generate_polygon(center=centerx,
-                                           #    avg_radius=random.randint(
-                                           #        0, max(21, )),
-                                           #    avg_radius=int(xsize/(2*gridCols)),
-                                           avg_radius=cellSize,
+                                              avg_radius=random.randint(
+                                                  0, max(21, int(xsize/(2*gridCols)))),
+                                              
+                                        #    avg_radius=cellSize,
                                            irregularity=clip(
                                                random.random(), 0, irregularity_clip),
                                            spikiness=clip(
