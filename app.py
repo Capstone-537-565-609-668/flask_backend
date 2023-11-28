@@ -1,7 +1,15 @@
+from polygon import Polygon as pgx
 import os
 import zipfile
+import numpy as np
 from time import sleep
+from shapely.geometry import Polygon as polyg
+from download_csv import convert_to_shape_csv
+import geopandas
 import json
+import sys
+import pandas as pd
+import matplotlib.pylab as plt
 from flask import Flask, abort, jsonify, render_template, request, send_file
 from flask_cors import CORS, cross_origin
 from generate_set import generate_sets
@@ -9,6 +17,7 @@ from generate_points import generate_points
 from voronoi_gen import generate_voronoi
 from convex_hull_gen import convex_hull_gen
 from realistic_polygon import analyze_polygon_data, generate_realistic_polygons
+
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -171,6 +180,37 @@ def test():
 
     # return 200 with dataset_id as json
     return jsonify({'dataset_id': dataset_id, 'csv_size': csv_size})
+
+
+@app.route('/polygonX', methods=['POST'])
+@cross_origin()
+def wfeoifiwenfoewi():
+
+    xsize = int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    num_points = int(request.get_json()['cardinality'])
+
+    x = np.random.uniform(0, xsize, size=(num_points, 1))
+    y = np.random.uniform(0, ysize, size=(num_points, 1))
+
+    random_points = [(x1[0], y1[0]) for x1, y1 in zip(x, y)]
+    edges = pgx.draw(random_points, 3)
+    edges = [(edge[0], edge[1]) for edge in edges]
+    # print(edges)
+    new = []
+    new.append(polyg(edges))
+    print(new)
+    dataset_descriptor = convert_to_shape_csv(
+        new, for_dataset=False)
+    json_visualization_data = geopandas.GeoDataFrame(
+        geometry=new).to_json()
+    # dump json_visualization_data to outputs/dataset_descriptor.json
+    with open(f"outputs/{dataset_descriptor}/visualization_data.json", "w") as f:
+        json.dump(json_visualization_data, f)
+
+    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
+
+    pass
 
 
 app.run(debug=False, port=5000)
