@@ -22,7 +22,7 @@ load_dotenv()
 '''
 
 
-def analyze_polygon_data(type_param, xsize, ysize, card):
+def analyze_polygon_data(type_param, card, xsize=500, ysize=500):
     client = pymongo.MongoClient(
         os.getenv("DB_URI"), tlsCAFile=certifi.where())
     db = client[os.getenv("MONGO_DBNAME")]

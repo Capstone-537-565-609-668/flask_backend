@@ -16,10 +16,18 @@ from generate_set import generate_sets
 from generate_points import generate_points
 from voronoi_gen import generate_voronoi
 from convex_hull_gen import convex_hull_gen
+import pandas as pd
+import pickle
 from realistic_polygon import analyze_polygon_data, generate_realistic_polygons
 
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+# Model import
+model_filename = "best_random_forest_model.sav"
+model = pickle.load(open(model_filename, 'rb'))
+
 
 app = Flask(__name__)
 CORS(app)
@@ -33,12 +41,26 @@ def index():
 @app.route("/realistic_polygon/", methods=["POST"])
 @cross_origin()
 def get_realistic_polygon():
-    card = int(request.get_json()['cardinality'])
-    xsize = int(request.get_json()['xsize'])
-    ysize = int(request.get_json()['ysize'])
+
+    card = 0
+    if (request.get_json().get('file_size', None) != None):
+        print("File size found")
+        model_filename = 'best_random_forest_model_new.sav'
+        loaded_model = pickle.load(open(model_filename, 'rb'))
+        file_size = int(request.get_json()['file_size'])
+        df = pd.DataFrame({'file_size': [file_size]})
+        predictions = int(loaded_model.predict(df))
+
+        card += predictions
+        print(f"Card = {card} File Size = {file_size}")
+    else:
+
+        card += int(request.get_json()['card'])
+
     type = request.get_json()['type']
+
     dataset_descriptor, json_visualization_data = analyze_polygon_data(
-        type, xsize, ysize, card)
+        type, card=card)
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
 
 
