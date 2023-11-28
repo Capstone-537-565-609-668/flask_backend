@@ -16,8 +16,7 @@ from generate_set import generate_sets
 from generate_points import generate_points
 from voronoi_gen import generate_voronoi
 from convex_hull_gen import convex_hull_gen
-from realistic_polygon import analyze_polygon_data
-
+from realistic_polygon import analyze_polygon_data, generate_realistic_polygons
 
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +38,18 @@ def get_realistic_polygon():
     ysize = int(request.get_json()['ysize'])
     type = request.get_json()['type']
     dataset_descriptor, json_visualization_data = analyze_polygon_data(
+        type, xsize, ysize, card)
+    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
+
+
+@app.route("/realistic_polygon/v2/", methods=["POST"])
+@cross_origin()
+def get_realistic_polygon_v2():
+    card = int(request.get_json()['cardinality'])
+    xsize = int(request.get_json()['xsize'])
+    ysize = int(request.get_json()['ysize'])
+    type = request.get_json()['type']
+    dataset_descriptor, json_visualization_data = generate_realistic_polygons(
         type, xsize, ysize, card)
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
 
