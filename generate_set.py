@@ -58,7 +58,7 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
 
             shapes.append(generate_polygon(center=centerx,
                                               avg_radius=random.randint(
-                                                  0, max(21, int(xsize/(2*gridCols)))),
+                                                  20, max(21, int(xsize/(2*gridCols)))),
                                               
                                         #    avg_radius=cellSize,
                                            irregularity=clip(
