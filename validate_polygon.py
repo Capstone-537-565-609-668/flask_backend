@@ -15,6 +15,12 @@ def correct_invalid_geometry(geometry):
     else:
         return geometry
 
+def number_of_invalid(shp):
+    count = 0
+    for i in shp.index:
+        if shp['validity'][i] != 'Valid Geometry':
+            count+=1
+    return count
 
 def validate_polygon(pols):
     geoseries = gpd.GeoSeries(pols)
