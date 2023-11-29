@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Model import
 model_filename = "best_random_forest_model.sav"
-model = pickle.load(open(model_filename, 'rb'))
+# model = pickle.load(open(model_filename, 'rb'))
 
 
 app = Flask(__name__)
