@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas
 import uuid
 import os
+from aws_conn import uploadFolder
 
 
 def convert_to_shape_csv(polygons, for_dataset=False):
@@ -31,4 +32,9 @@ def convert_to_shape_csv(polygons, for_dataset=False):
     if (for_dataset):
         return (dataset_id, csv_size)
 
+    folderPath = f"outputs/{dataset_id}"
+    uploadFolder(folderPath, dataset_id)
+    print("Uploaded to S3 Successfully")
+
+    print()
     return dataset_id
