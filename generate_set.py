@@ -74,7 +74,11 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     pols = validate_polygon(shp)
 
     # send 15 polygons for visualization which is json serialized
-    for_vis = pols[:15]
+    if card>15:
+        for_vis = random.sample(pols, 15)
+    else:
+        for_vis = pols
+
 
     if (for_dataset):
         dataset_descriptor, csv_size = convert_to_shape_csv(
