@@ -110,7 +110,7 @@ def generate_realistic_polygons(type_param, card):
     pols = []
 
     for i in range(card):
-        pols.append(Polygon(generate_polygon(center=random.choice(centers), avg_radius=random.choice(average_radius_list), irregularity=random.choice(
+        pols.append(Polygon(generate_polygon(center=random.choice(centers), avg_radius=random.choice(average_radius_list)*10, irregularity=random.choice(
             irregularity_coeff_list), spikiness=random.choice(spikiness_score_list), num_vertices=random.choice(vertices_list))))
 
     # optional validate
