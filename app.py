@@ -186,6 +186,8 @@ def get_folder_by_uuid(uuid):
 
 @app.route('/get_file/<string:uuid>/<string:type>', methods=['GET'])
 def get_folder_by_uuid_type(uuid, type):
+    s3_base_path = "https://spatialpolygon.s3.ap-south-1.amazonaws.com/outputs"
+
     file_path = find_file_by_uuid_ext(uuid, type)
     if not file_path:
         abort(404, f"Folder with UUID '{uuid}' not found.")
