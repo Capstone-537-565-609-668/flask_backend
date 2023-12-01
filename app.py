@@ -19,6 +19,8 @@ from convex_hull_gen import convex_hull_gen
 import pandas as pd
 import pickle
 from realistic_polygon import analyze_polygon_data, generate_realistic_polygons
+from generate_sets_parallel import generate_sets_parallel
+import time
 
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +57,7 @@ def get_realistic_polygon():
         print(f"Card = {card} File Size = {file_size}")
     else:
 
-        card += int(request.get_json()['card'])
+        card += int(request.get_json()['cardinality'])
 
     type = request.get_json()['type']
 
@@ -68,11 +70,11 @@ def get_realistic_polygon():
 @cross_origin()
 def get_realistic_polygon_v2():
     card = int(request.get_json()['cardinality'])
-    xsize = int(request.get_json()['xsize'])
-    ysize = int(request.get_json()['ysize'])
+    # xsize = int(request.get_json()['xsize'])
+    # ysize = int(request.get_json()['ysize'])
     type = request.get_json()['type']
     dataset_descriptor, json_visualization_data = generate_realistic_polygons(
-        type, xsize, ysize, card)
+        type, card)
     return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer': json_visualization_data})
 
 
@@ -116,9 +118,17 @@ def get_json_data():
     irregularity_clip = float(request.get_json()['irregularity_clip'])
     spikiness_clip = float(request.get_json()['spikiness_clip'])
     # Visualize the generated polygons
-    dataset_id, for_visualizer = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
-                                               irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
+    st = time.time()
 
+    if card < 300000:
+        dataset_id, for_visualizer = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
+                                                   irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
+    else:
+        print(f"Using spark for dataset size {card}")
+        dataset_id, for_visualizer = generate_sets_parallel(card, xsize, ysize, vertices_bound, show_grid=False,
+                                                            irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
+    et = time.time()
+    print(f"Time taken to generate {card}: {(et-st):.2f} ")
     # return 200 with dataset_id as json
     return jsonify({'dataset_id': dataset_id, 'for_visualizer': for_visualizer})
 

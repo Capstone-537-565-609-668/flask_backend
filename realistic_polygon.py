@@ -69,7 +69,7 @@ def analyze_polygon_data(type_param, card, xsize=500, ysize=500):
     return generate_sets(card, xsize, ysize, [min_vertices, max_vertices], show_grid=True, irregularity_clip=avg_irregularity, spikiness_clip=avg_spikiness)
 
 
-def generate_realistic_polygons(type_param, xsize, ysize, card):
+def generate_realistic_polygons(type_param, card):
     client = pymongo.MongoClient(
         os.getenv("DB_URI"), tlsCAFile=certifi.where())
     db = client[os.getenv("MONGO_DBNAME")]

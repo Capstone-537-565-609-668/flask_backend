@@ -19,9 +19,8 @@ from validate_polygon import validate_polygon
 
 
 def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregularity_clip=0.8, spikiness_clip=0.8, for_dataset=False):
-    cellSize = 50
-    gridCols = xsize//cellSize
-    gridRows = ysize//cellSize
+    gridCols = math.ceil(math.sqrt(card))
+    gridRows = math.ceil(math.sqrt(card))
     print(card, gridCols, gridRows, gridCols * gridRows)
     if card > (gridCols*gridRows):
         card = gridCols*gridRows
@@ -57,10 +56,10 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
                        clip((ysize/(2*gridRows))+(key)*(ysize/(gridRows)), 0, ysize))
 
             shapes.append(generate_polygon(center=centerx,
-                                              avg_radius=random.randint(
-                                                  20, max(21, int(xsize/(2*gridCols)))),
-                                              
-                                        #    avg_radius=cellSize,
+                                           avg_radius=random.randint(
+                                               20, max(21, int(xsize/(2*gridCols)))),
+
+                                           #    avg_radius=cellSize,
                                            irregularity=clip(
                                                random.random(), 0, irregularity_clip),
                                            spikiness=clip(
@@ -72,10 +71,10 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     for i in shapes:
         p1 = Polygon(i)
         pols.append(p1)
-    pols = validate_polygon(pols)
+    # pols = validate_polygon(pols)
 
     # send 15 polygons for visualization which is json serialized
-    if card>15:
+    if card > 15:
         for_vis = random.sample(pols, 15)
     else:
         for_vis = pols

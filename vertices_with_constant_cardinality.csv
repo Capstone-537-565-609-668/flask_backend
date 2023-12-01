@@ -1,7 +1,1 @@
 dataset_id, Tries ,time_taken,card,xsize,ysize,vertices_bound_min,vertices_bound_max,irregularity_clip,spikiness_clip
-9dfa8811-c97b-43ff-981e-5dc7b2501d69,1,0.09,100,500,500,3,10,0.8,0.8
-24c2a87d-4486-4f94-bc0d-aee2ae4bdd55,2,0.06,100,500,500,3,10,0.8,0.8
-ee1d41b3-4ca3-4fa5-ae5a-66de13059e9b,3,0.05,100,500,500,3,10,0.8,0.8
-34f93394-2b98-41e1-aa28-504947f335e0,1,0.11,100,500,500,3,100,0.8,0.8
-f429e0f6-2218-4146-b7d5-201d8bb00ee8,2,0.10,100,500,500,3,100,0.8,0.8
-c739d121-6c05-4e85-abc5-a89aadcc08eb,3,0.12,100,500,500,3,100,0.8,0.8

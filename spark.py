@@ -3,16 +3,17 @@ from pyspark.sql import SparkSession
 import random
 import math
 import json
-import generate_polygon
+from generate_polygon import generate_polygon
 import time
 import geopandas
 from shapely.geometry import Polygon
 from download_csv import convert_to_shape_csv
 from utils import clip
 
-conf = SparkConf().setAppName("PolygonGeneration")
-sc = SparkContext(conf=conf)
 
+conf = SparkConf().setAppName("PolygonGeneration")
+SparkContext.setSystemProperty('spark.executor.memory', '12g')
+sc = SparkContext(conf=conf)
 spark = SparkSession(sc)
 
 
@@ -69,6 +70,7 @@ def generate_sets_parallel(card, xsize, ysize, vertices_bounds, show_grid=True, 
     with open(f"outputs/{dataset_descriptor}/visualization_data.json", "w") as f:
         json.dump(json_visualization_data, f)
     # return gen_rdd
+
     return (dataset_descriptor, json_visualization_data)
 
 
@@ -194,14 +196,14 @@ params = {
         #     "irregularity_clip":0.8,
         #     "spikiness_clip":0.8
         # },
-        {
-            "card": 100000,
-            "xsize": 100000,
-            "ysize": 100000,
-            "vertices_bound": [3, 10000],
-            "irregularity_clip":0.8,
-            "spikiness_clip":0.8
-        }
+        # {
+        #     "card": 100000,
+        #     "xsize": 100000,
+        #     "ysize": 100000,
+        #     "vertices_bound": [3, 10000],
+        #     "irregularity_clip": 0.8,
+        #     "spikiness_clip": 0.8
+        # }
     ],
     "cardinality_with_constant_vertices": [
         {
@@ -209,47 +211,47 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 10000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 20000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 30000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 40000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         }, {
             "card": 50000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
 
         {
@@ -257,8 +259,8 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
 
         {
@@ -266,16 +268,16 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 80000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
 
         {
@@ -283,8 +285,8 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
 
         {
@@ -292,48 +294,48 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 200000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 300000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 400000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 500000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
         {
             "card": 600000,
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
         },
 
         {
@@ -341,9 +343,17 @@ params = {
             "xsize": 10000,
             "ysize": 10000,
             "vertices_bound": [3, 50],
-            "irregularity_clip":0.6,
-            "spikiness_clip":0.6
-        }
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
+        },
+        {
+            "card": 800000,
+            "xsize": 10000,
+            "ysize": 10000,
+            "vertices_bound": [3, 50],
+            "irregularity_clip": 0.6,
+            "spikiness_clip": 0.6
+        },
 
     ]
 

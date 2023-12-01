@@ -315,10 +315,6 @@ def make_api_request(url, params):
 
 # Make the API request and measure time
 
-# test_cases_vertices = params["vertices_with_constant_cardinality"]
-# test_cases_cardinality = params["cardinality_with_constant_vertices"]
-
-# For Vertices with constant cardinality
 for test_title in params.keys():
     result = []
     print(
