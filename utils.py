@@ -6,6 +6,7 @@ from download_csv import convert_to_shape_csv
 import geopandas
 import json
 import ast
+import numpy as np
 '''
   Time : O(1)
   Space : O(1)
@@ -85,3 +86,12 @@ def string_to_tuple(coord_string):
     except (SyntaxError, ValueError) as e:
         print(f"Error: {e}")
         return None
+
+
+def generate_points_uniform(num_points, xsize, ysize):
+    min_x = 0
+    min_y = 0
+    x = np.random.uniform(min_x, xsize, size=(num_points, 1))
+    y = np.random.uniform(min_y, ysize, size=(num_points, 1))
+    random_points = [(x1[0], y1[0]) for x1, y1 in zip(x, y)]
+    return random_points

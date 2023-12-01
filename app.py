@@ -21,6 +21,7 @@ import pickle
 from realistic_polygon import analyze_polygon_data, generate_realistic_polygons
 from generate_sets_parallel import generate_sets_parallel
 import time
+from utils import generate_points_uniform
 
 # Get the parent directory of this script. (Global)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -97,9 +98,12 @@ def get_data_voronoi():
     xsize = int(request.get_json()['xsize'])
     ysize = int(request.get_json()['ysize'])
     seed_ = generate_points(cardinality, xsize, ysize)
-    dataset_descriptor, json_visualization_data = generate_voronoi(seed_)
+    # seed_ = [[i[0][0], i[0][1]] for i in seed_]
+    seed_ = generate_points_uniform(cardinality, xsize, ysize)
+    dataset_descriptor, json_visualization_data, points = generate_voronoi(
+        seed_)
 
-    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data})
+    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data, 'points': points})
 
 
 @app.route("/generate_points_convexhull/", methods=["POST"])
@@ -111,11 +115,11 @@ def get_data_convexHull():
     # if (min_coord == max_coord):
     #     return jsonify({'dataset_id': None, 'for_visualizer':  None, "status": 501})
 
-    dataset_descriptor, json_visualization_data = convex_hull_gen(num_points=cardinality,
-                                                                  xsize=xsize,
-                                                                  ysize=ysize)
+    dataset_descriptor, json_visualization_data, points = convex_hull_gen(num_points=cardinality,
+                                                                          xsize=xsize,
+                                                                          ysize=ysize)
 
-    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data})
+    return jsonify({'dataset_id': dataset_descriptor, 'for_visualizer':  json_visualization_data, 'points': points})
 
 
 @app.route('/', methods=["POST"])

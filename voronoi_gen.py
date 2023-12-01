@@ -2,12 +2,11 @@
 from scipy.spatial import Voronoi
 import numpy as np
 from shapely.geometry import Polygon
-from utils import convert_for_visualize
+from utils import convert_for_visualize, generate_points_uniform
 
 
-def generate_voronoi(seed_points, show_diag=False):
-
-    transformed_points = np.array([[i[0][0], i[0][1]] for i in seed_points])
+def generate_voronoi(seed_):
+    transformed_points = np.array(seed_)
 
     vor = Voronoi(transformed_points)
 
@@ -19,5 +18,4 @@ def generate_voronoi(seed_points, show_diag=False):
             polygons.append(shapely_polygon)
 
     descriptor_id, json_visualization_data = convert_for_visualize(polygons)
-
-    return descriptor_id, json_visualization_data
+    return descriptor_id, json_visualization_data, transformed_points

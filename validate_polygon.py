@@ -39,7 +39,7 @@ def overlap_correction(shp, buffer_distance=0.00000001):
                 if (
                     geometry1.geom_type == 'Polygon'
                     and geometry2.geom_type == 'Polygon' and geometry1.buffer(buffer_distance).intersects(geometry2)
-                    
+
                 ):
                     # Remove overlapping part from geometry2
                     diff_geometry = geometry2.difference(geometry1)
@@ -50,14 +50,14 @@ def overlap_correction(shp, buffer_distance=0.00000001):
     # Apply correction to invalid geometries again
     # shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
     return shp
- 
-def validate_polygon(shp,card):
+
+
+def validate_polygon(shp, card):
     def validate_only(shp):
-    
+
         shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
 
         multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
-        
 
         # if not multi_polygons.empty:
         multi_polygons = multi_polygons.explode(index_parts=True)
@@ -66,10 +66,10 @@ def validate_polygon(shp,card):
         # Recursive call to process MultiPolygons
         # return validate_geometry(shp)
         return shp
-    shp=validate_only(shp)
-    if(card<=1000):
-        shp=overlap_correction(shp)
-        shp=validate_only(shp)
+    shp = validate_only(shp)
+    if (card < 1000):
+        shp = overlap_correction(shp)
+        shp = validate_only(shp)
     return shp['geometry'].tolist()
 
 
