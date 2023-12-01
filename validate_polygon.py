@@ -31,9 +31,9 @@ def overlap_correction(shp, buffer_distance=0.00000001):
 
                 # Check for overlaps within the buffer distance
                 if (
-                    geometry1.buffer(buffer_distance).intersects(geometry2)
-                    and geometry1.geom_type == 'Polygon'
-                    and geometry2.geom_type == 'Polygon'
+                    geometry1.geom_type == 'Polygon'
+                    and geometry2.geom_type == 'Polygon' and geometry1.buffer(buffer_distance).intersects(geometry2)
+                    
                 ):
                     # Remove overlapping part from geometry2
                     diff_geometry = geometry2.difference(geometry1)
@@ -47,20 +47,25 @@ def overlap_correction(shp, buffer_distance=0.00000001):
     # shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
     return shp
  
-def validate_polygon(shp):
-    shp=overlap_correction(shp,0.0000001)
-    shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
-
-    multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
+def validate_polygon(shp,card):
+    def validate_only(shp):
     
+        shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
 
-    # if not multi_polygons.empty:
-    multi_polygons = multi_polygons.explode(index_parts=True)
-    shp = pd.concat([shp, multi_polygons], ignore_index=True)
-    shp = shp[shp['geometry'].geom_type == 'Polygon']
+        multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
+        
+
+        # if not multi_polygons.empty:
+        multi_polygons = multi_polygons.explode(index_parts=True)
+        shp = pd.concat([shp, multi_polygons], ignore_index=True)
+        shp = shp[shp['geometry'].geom_type == 'Polygon']
+        return shp
         # Recursive call to process MultiPolygons
         # return validate_geometry(shp)
-    
+    shp=validate_only(shp)
+    if(card<=1000):
+        shp=overlap_correction(shp,0.0000001)
+        shp=validate_only(shp)
     return shp['geometry'].tolist()
 
    

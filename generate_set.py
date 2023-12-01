@@ -71,10 +71,12 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     for i in shapes:
         p1 = Polygon(i)
         pols.append(p1)
+    ###
+    
     geoseries = geopandas.GeoSeries(pols)
     shp = geopandas.GeoDataFrame(geoseries, columns=['geometry'])
-    pols = validate_polygon(shp)
-
+    pols = validate_polygon(shp,card)
+    ###
     # send 15 polygons for visualization which is json serialized
     if card>15:
         for_vis = random.sample(pols, 15)
