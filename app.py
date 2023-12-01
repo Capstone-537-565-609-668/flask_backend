@@ -207,11 +207,11 @@ def test():
     irregularity_clip = float(request.get_json()['irregularity_clip'])
     spikiness_clip = float(request.get_json()['spikiness_clip'])
     # Visualize the generated polygons
-    dataset_id, csv_size = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
-                                         irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip, for_dataset=True)
+    dataset_id, invalid_pols, time_ = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
+                                                    irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip, for_dataset=True)
 
     # return 200 with dataset_id as json
-    return jsonify({'dataset_id': dataset_id, 'csv_size': csv_size})
+    return jsonify({'dataset_id': dataset_id, 'invalid_pols': invalid_pols, 'time_taken': time_})
 
 
 @app.route('/polygonX', methods=['POST'])

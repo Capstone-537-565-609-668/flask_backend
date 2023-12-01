@@ -8,6 +8,16 @@ import geopandas as gpd
 from shapely.wkt import loads
 
 
+def number_of_invalid(shp):
+    shp['validity'] = shp.apply(
+        lambda row: explain_validity(row.geometry), axis=1)
+    count = 0
+    for i in shp.index:
+        if shp['validity'][i] != 'Valid Geometry':
+            count += 1
+    return count
+
+
 def correct_invalid_geometry(geometry):
     if not geometry.is_valid:
 
@@ -15,12 +25,14 @@ def correct_invalid_geometry(geometry):
     else:
         return geometry
 
-def number_of_invalid(shp):
-    count = 0
-    for i in shp.index:
-        if shp['validity'][i] != 'Valid Geometry':
-            count+=1
-    return count
+
+# def number_of_invalid(shp):
+#     count = 0
+#     for i in shp.index:
+#         if shp['validity'][i] != 'Valid Geometry':
+#             count += 1
+#     return count
+
 
 def validate_polygon(pols):
     geoseries = gpd.GeoSeries(pols)
@@ -33,4 +45,5 @@ def validate_polygon(pols):
 
     # Concatenate the exploded MultiPolygons back to the original GeoDataFrame
     shp = pd.concat([shp, multi_polygons], ignore_index=True)
+
     return shp['geometry'].tolist()
