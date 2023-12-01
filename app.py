@@ -120,13 +120,13 @@ def get_json_data():
     # Visualize the generated polygons
     st = time.time()
 
-    if card < 300000:
-        dataset_id, for_visualizer = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
-                                                   irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
-    else:
-        print(f"Using spark for dataset size {card}")
-        dataset_id, for_visualizer = generate_sets_parallel(card, xsize, ysize, vertices_bound, show_grid=False,
-                                                            irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
+    # if card < 300000:
+    dataset_id, for_visualizer = generate_sets(card, xsize, ysize, vertices_bound, show_grid=False,
+                                               irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
+    # else:
+    #     print(f"Using spark for dataset size {card}")
+    #     dataset_id, for_visualizer = generate_sets_parallel(card, xsize, ysize, vertices_bound, show_grid=False,
+    #                                                         irregularity_clip=irregularity_clip, spikiness_clip=spikiness_clip)
     et = time.time()
     print(f"Time taken to generate {card}: {(et-st):.2f} ")
     # return 200 with dataset_id as json
