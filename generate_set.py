@@ -1,7 +1,7 @@
 import json
 import math
 import random
-
+import time
 import geopandas
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
@@ -10,7 +10,7 @@ from shapely.geometry import Polygon
 from download_csv import convert_to_shape_csv
 from generate_polygon import generate_polygon
 from utils import clip
-from validate_polygon import validate_polygon
+from validate_polygon import validate_polygon, number_of_invalid
 
 '''
   Time : O(N) , where N is number of vertices
@@ -71,22 +71,24 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
     for i in shapes:
         p1 = Polygon(i)
         pols.append(p1)
+    # pols = validate_polygon(pols)
     geoseries = geopandas.GeoSeries(pols)
     shp = geopandas.GeoDataFrame(geoseries, columns=['geometry'])
+    count = number_of_invalid(shp=shp)
+    start = time.time()
     pols = validate_polygon(shp)
-
+    end = time.time()
+    time_taken = end - start
     # send 15 polygons for visualization which is json serialized
-    if card>15:
+    if card > 15:
         for_vis = random.sample(pols, 15)
     else:
         for_vis = pols
 
-
-
     if (for_dataset):
         dataset_descriptor, csv_size = convert_to_shape_csv(
             pols[:card], for_dataset=for_dataset)
-        return (dataset_descriptor, csv_size)
+        return (dataset_descriptor, count, time_taken)
 
     dataset_descriptor = convert_to_shape_csv(
         pols[:card], for_dataset=for_dataset)
