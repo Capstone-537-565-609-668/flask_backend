@@ -69,7 +69,19 @@ def get_realistic_polygon():
 @app.route("/realistic_polygon/v2/", methods=["POST"])
 @cross_origin()
 def get_realistic_polygon_v2():
-    card = int(request.get_json()['cardinality'])
+    card = 0
+    if (request.get_json().get('file_size', None) != None):
+        print("File size found")
+        model_filename = 'best_random_forest_model_new.sav'
+        loaded_model = pickle.load(open(model_filename, 'rb'))
+        file_size = int(request.get_json()['file_size'])
+        df = pd.DataFrame({'file_size': [file_size]})
+        predictions = int(loaded_model.predict(df))
+
+        card += predictions
+        print(f"Card = {card} File Size = {file_size}")
+    else:
+        card += int(request.get_json()['cardinality'])
     # xsize = int(request.get_json()['xsize'])
     # ysize = int(request.get_json()['ysize'])
     type = request.get_json()['type']
