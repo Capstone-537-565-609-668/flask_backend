@@ -50,7 +50,6 @@ def overlap_correction(shp, buffer_distance=0.00000001):
     # Apply correction to invalid geometries again
     # shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
     return shp
-<<<<<<< HEAD
  
 def validate_polygon(shp,card):
     def validate_only(shp):
@@ -64,30 +63,13 @@ def validate_polygon(shp,card):
         multi_polygons = multi_polygons.explode(index_parts=True)
         shp = pd.concat([shp, multi_polygons], ignore_index=True)
         shp = shp[shp['geometry'].geom_type == 'Polygon']
-        return shp
         # Recursive call to process MultiPolygons
         # return validate_geometry(shp)
+        return shp
     shp=validate_only(shp)
     if(card<=1000):
-        shp=overlap_correction(shp,0.0000001)
+        shp=overlap_correction(shp)
         shp=validate_only(shp)
-=======
-
-
-def validate_polygon(shp):
-    shp = overlap_correction(shp, 0.0000001)
-    shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
-
-    multi_polygons = shp[shp['geometry'].geom_type == 'MultiPolygon']
-
-    # if not multi_polygons.empty:
-    multi_polygons = multi_polygons.explode(index_parts=True)
-    shp = pd.concat([shp, multi_polygons], ignore_index=True)
-    shp = shp[shp['geometry'].geom_type == 'Polygon']
-    # Recursive call to process MultiPolygons
-    # return validate_geometry(shp)
-
->>>>>>> e4a1753cc81ecb9a7339a1202187288ff2ed2895
     return shp['geometry'].tolist()
 
 
