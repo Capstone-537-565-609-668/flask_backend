@@ -3,9 +3,16 @@ import csv
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-from shapely.validation import make_valid
+from shapely.validation import explain_validity, make_valid
 
 
+def number_of_invalid(shp):
+    shp['validity'] = shp.apply(lambda row: explain_validity(row.geometry), axis=1)
+    count = 0
+    for i in shp.index:
+        if shp['validity'][i] != 'Valid Geometry':
+            count+=1
+    return count
 def correct_invalid_geometry(geometry):
     if not geometry.is_valid:
         return make_valid(geometry)
