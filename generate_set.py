@@ -58,6 +58,8 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
             shapes.append(generate_polygon(center=centerx,
                                            avg_radius=random.randint(
                                                20, max(21, int(xsize/(2*gridCols)))),
+
+                                           #    avg_radius=cellSize,
                                            irregularity=clip(
                                                random.random(), 0, irregularity_clip),
                                            spikiness=clip(
@@ -78,6 +80,7 @@ def generate_sets(card, xsize, ysize, vertices_bounds, show_grid=True, irregular
         for_vis = random.sample(pols, 15)
     else:
         for_vis = pols
+
 
 
     if (for_dataset):

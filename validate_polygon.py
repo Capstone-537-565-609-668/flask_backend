@@ -31,8 +31,10 @@ def overlap_correction(shp, buffer_distance=0.00000001):
                     # Remove overlapping part from geometry2
                     diff_geometry = geometry2.difference(geometry1)
 
+
                     # Update the DataFrame with the modified geometry
                     shp.at[j, 'geometry'] = diff_geometry
+
 
     # Apply correction to invalid geometries again
     # shp['geometry'] = shp['geometry'].apply(correct_invalid_geometry)
